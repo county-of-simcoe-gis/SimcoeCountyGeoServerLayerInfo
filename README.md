@@ -4,7 +4,7 @@
 
 This app is designed to work with the GeoServer rest api. It displays basic Metadata information from the end point.
 
-This app is called from layers component in our Web Map viewer.
+This app is called from layers component in our Web Map viewer [WebViewer](https://github.com/county-of-simcoe-gis/SimcoeCountyWebViewer).
 
 It accepts a Url rest end point as a parameter.
 e.g. https://opengis.simcoe.ca/layerInfo/?URL=https://opengis.simcoe.ca/geoserver/rest/workspaces/simcoe/datastores/paradise/featuretypes/Ganaraska+Trail.json
