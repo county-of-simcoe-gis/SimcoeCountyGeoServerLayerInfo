@@ -2,10 +2,13 @@
   "name": "geoserverlayerinfo",
   "version": "0.1.0",
   "private": true,
+  "homepage" : "http://paradise:8443/layerInfo",
   "dependencies": {
+    "ol": "^5.3.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "shortid": "^2.2.14"
   },
   "scripts": {
     "start": "react-scripts start",
