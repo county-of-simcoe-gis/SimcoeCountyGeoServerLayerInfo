@@ -8,13 +8,22 @@ import MapComponent from "./MapComponent.jsx";
 
 const url = new URL(window.location.href);
 const layerURL = url.searchParams.get("URL");
+const showDownload = url.searchParams.get("SHOW_DOWNLOAD");
+
+let serverUrl = null;
+let downloadTemplate = null;
+if (layerURL !== null) {
+  serverUrl = layerURL.split("rest/")[0];
+  downloadTemplate = (serverUrl, workspace, layerName) => `${serverUrl}wfs?service=wfs&version=1.1.0&request=GetFeature&typeNames=${workspace}:${layerName}&outputFormat=SHAPE-ZIP`;
+}
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      layerInfo: this.getInfo()
+      layerInfo: this.getInfo(),
+      termsAccepted: false
     };
   }
 
@@ -54,15 +63,27 @@ class App extends Component {
     window.location.href = mailTo;
   };
 
+  onTermsChange = evt => {
+    this.setState({ termsAccepted: evt.target.checked });
+  };
+
+  onDownloadClick = evt => {
+    const workspace = this.state.layerInfo.namespace.name;
+    const layerName = this.state.layerInfo.name;
+    window.open(downloadTemplate(serverUrl, workspace, layerName), "_blank");
+  };
   render() {
     if (this.state.layerInfo === undefined || this.state.layerInfo.nativeCRS === undefined)
       return <h3 className={layerURL == null ? "gli-main-error" : "gli-main-error hidden"}>Error: Layer Not Found or no URL Parameter provided.</h3>;
 
     const proj = this.getFormattedProjection();
-    const fields = this.state.layerInfo.attributes.attribute;
+    let fields = this.state.layerInfo.attributes.attribute;
+    if (!Array.isArray(fields)) fields = [fields];
+
     const crs = this.state.layerInfo.nativeCRS["$"];
     const boundingBox = this.state.layerInfo.nativeBoundingBox;
 
+    console.log(showDownload);
     return (
       <div className="main-container">
         <h1 className={layerURL == null ? "gli-main-error" : "gli-main-error hidden"}>Error: Layer Not Found</h1>
@@ -72,7 +93,7 @@ class App extends Component {
               <tr>
                 <td className="title">{this.state.layerInfo.title}</td>
                 <td style={{ width: "60px" }}>
-                  <img onClick={this.onShareClick} title="Share this page through E-Mail" className="headerButton" src={images["share-icon.png"]} />
+                  <img onClick={this.onShareClick} title="Share this page through E-Mail" className="headerButton" src={images["share-icon.png"]} alt="Share" />
                 </td>
 
                 <td style={{ width: "60px" }}>
@@ -83,6 +104,7 @@ class App extends Component {
                     title="Print this page"
                     className="headerButton"
                     src={images["print-icon.png"]}
+                    alt="Print"
                   />
                 </td>
                 <td style={{ width: "60px" }}>
@@ -93,11 +115,32 @@ class App extends Component {
                     title="Open this page in a new window"
                     className="headerButton"
                     src={images["new-window-icon.png"]}
+                    alt="New Window"
                   />
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div className={showDownload == 1 && this.state.layerInfo.name !== "Assessment Parcel" ? "item-container" : "hidden"}>
+          <fieldset>
+            <legend>Download</legend>
+            <div className="item-content">
+              <button className={this.state.termsAccepted ? "" : "disabled"} onClick={this.onDownloadClick}>
+                Download
+              </button>
+              <div className="download-container">
+                <label>
+                  <input type="checkbox" onChange={this.onTermsChange}></input>By dowloading this information you accept the terms of the Open Government License - Simcoe County.
+                </label>
+                &nbsp;
+                <a href="http://maps.simcoe.ca/openlicense.html" target="_blank" rel="noopener noreferrer">
+                  View Terms of Use
+                </a>
+              </div>
+            </div>
+          </fieldset>
         </div>
 
         <div className="item-container">
@@ -127,12 +170,20 @@ class App extends Component {
 
         <div className="footer">
           <div style={{ float: "left" }}>
-            Layer info page generated using{" "}
-            <a href="https://opengis.simcoe.ca" target="_blank">
-              maps.simcoe.ca
-            </a>{" "}
-            interactive mapping.
+            <div>
+              <a href="http://maps.simcoe.ca/openlicense.html" target="_blank" rel="noopener noreferrer">
+                View Terms of Use
+              </a>
+            </div>
             <br />
+            <div>
+              Layer info page generated using{" "}
+              <a href="https://opengis.simcoe.ca" target="_blank" rel="noopener noreferrer">
+                opengis.simcoe.ca
+              </a>{" "}
+              interactive mapping.
+              <br />
+            </div>
           </div>
           <div style={{ float: "right" }}>{"Generated on: " + this.formatDate()}</div>
         </div>

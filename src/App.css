@@ -7,30 +7,26 @@ body {
   max-width: 1050px;
   margin: 10px;
   background-color: #fff;
-  
 }
 
-.header{
+.header {
   margin: 10px;
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid #ddd;
   /* margin-left:10px; */
 }
-.item-content{
+.item-content {
   margin: 5px;
 }
 
-.item-content-fields{
+.item-content-fields {
   -webkit-column-count: 2; /* Chrome, Safari, Opera */
   -moz-column-count: 2; /* Firefox */
   column-count: 2;
 }
 
-.item-container{
+.item-container {
   margin-bottom: 10px;
 }
-
-
-
 
 .title {
   font-size: 25px;
@@ -51,60 +47,73 @@ body {
   text-shadow: 1px 1px 1px rgb(199, 199, 199);
   color: #505050;
   margin-bottom: 10px;
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid #ddd;
   padding-bottom: 5px;
 }
 fieldset {
   padding: 10px;
-   padding-top: 0px;
-   border: 1px solid #D8D8D8;
-   margin-top: 8px;
-   box-shadow: 0 0 11px #E0E0E0;
-   background-color: #fff;
-   margin: 5px;
+  padding-top: 0px;
+  border: 1px solid #d8d8d8;
+  margin-top: 8px;
+  box-shadow: 0 0 11px #e0e0e0;
+  background-color: #fff;
+  margin: 5px;
 }
 
 legend {
-   display: block;
-   width: auto;
-   padding: 5px;
-   margin-bottom: 2px;
-   border: none;
-   font-size: 14px;
-   color: #FFFFFF;
-   border: 2px solid #FFFFFF;
-   padding-left: 10px;
-   padding-right: 10px;
-   /* border-radius: 5px; */
-   background-color: #1F8BBD;
-   box-shadow: 0 0 10px #929292;
-   letter-spacing: 1px;
-   max-width:250px;
+  display: block;
+  width: auto;
+  padding: 5px;
+  margin-bottom: 2px;
+  border: none;
+  font-size: 14px;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  padding-left: 10px;
+  padding-right: 10px;
+  /* border-radius: 5px; */
+  background-color: #1f8bbd;
+  box-shadow: 0 0 10px #929292;
+  letter-spacing: 1px;
+  max-width: 250px;
 }
 
-.gli-main-error{
-  color: red
+.gli-main-error {
+  color: red;
 }
-.gli-main-error.hidden{
+.gli-main-error.hidden {
   display: none;
 }
 
-.footer{
-
+.footer {
   border-top: 1px solid #ddd;
-  padding:10px;
+  padding: 10px;
   margin-top: 10px;
-  padding-bottom:50px;
-  font-size:12px;
+  padding-bottom: 50px;
+  font-size: 12px;
 }
 
+.download-container {
+  position: relative;
+  top: 3px;
+  display: inline;
+  margin-left: 10px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.hidden {
+  display: none;
+}
 @media print {
   .headerButton {
-      display:none;
+    display: none;
   }
 
-  .show-all-checkbox{
-      display:none;
+  .show-all-checkbox {
+    display: none;
   }
-
 }
