@@ -4,7 +4,6 @@ import * as helpers from "./helpers";
 import MapComponent from "./MapComponent.jsx";
 import mainConfig from "./config.json";
 import ReactGA from "react-ga";
-// import AttributeTable from "./helpers/AttributeTable.jsx";
 
 if (mainConfig.googleAnalyticsID !== undefined && mainConfig.googleAnalyticsID !== "") {
   ReactGA.initialize(mainConfig.googleAnalyticsID);
