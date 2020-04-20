@@ -23,7 +23,7 @@ class App extends Component {
 
     this.state = {
       layerInfo: this.getInfo(),
-      termsAccepted: false
+      termsAccepted: false,
     };
   }
 
@@ -31,17 +31,32 @@ class App extends Component {
   getInfo() {
     if (layerURL == null) return;
 
-    helpers.getJSON(layerURL, response => {
+    helpers.getJSON(layerURL, (response) => {
       this.setState({ layerInfo: response.featureType });
     });
   }
 
   // CLEAN UP THE PROJECTION STRING
   getFormattedProjection = () => {
-    const projClass = this.state.layerInfo.nativeCRS["@class"];
-    let projArray = this.state.layerInfo.nativeCRS["$"].split('"');
+    let projClass = "";
+    if (this.state.layerInfo.nativeCRS["@class"] === undefined) {
+      if (this.state.layerInfo.nativeCRS.indexOf("GEOGCS") !== -1) projClass = "Geographic";
+      else projClass = "Projected";
+    } else {
+      projClass = this.state.layerInfo.nativeCRS["@class"];
+    }
 
-    return helpers.toTitleCase(projClass) + " - " + projArray[1];
+    let proj = "Undefined";
+    if (this.state.layerInfo.nativeCRS["$"] === undefined) {
+      let projArray = this.state.layerInfo.nativeCRS.split('"');
+      proj = helpers.toTitleCase(projClass) + " - " + projArray[1];
+    } else {
+      let projArray = this.state.layerInfo.nativeCRS["$"].split('"');
+      proj = helpers.toTitleCase(projClass) + " - " + projArray[1];
+    }
+
+    console.log(proj);
+    return proj;
   };
 
   // FORMAT DATE FOR FOOTER
@@ -63,11 +78,11 @@ class App extends Component {
     window.location.href = mailTo;
   };
 
-  onTermsChange = evt => {
+  onTermsChange = (evt) => {
     this.setState({ termsAccepted: evt.target.checked });
   };
 
-  onDownloadClick = evt => {
+  onDownloadClick = (evt) => {
     const workspace = this.state.layerInfo.namespace.name;
     const layerName = this.state.layerInfo.name;
     window.open(downloadTemplate(serverUrl, workspace, layerName), "_blank");
@@ -161,7 +176,7 @@ class App extends Component {
           <fieldset>
             <legend>Attribute Fields</legend>
             <div className="item-content-fields">
-              {fields.map(fieldInfo => (
+              {fields.map((fieldInfo) => (
                 <FieldItem key={helpers.getUID()} fieldInfo={fieldInfo} />
               ))}
             </div>
