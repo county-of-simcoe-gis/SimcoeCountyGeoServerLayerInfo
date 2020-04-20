@@ -2,6 +2,14 @@ import React, { Component } from "react";
 import "./App.css";
 import * as helpers from "./helpers";
 import MapComponent from "./MapComponent.jsx";
+import mainConfig from "./config.json";
+import ReactGA from "react-ga";
+// import AttributeTable from "./helpers/AttributeTable.jsx";
+
+if (mainConfig.googleAnalyticsID !== undefined && mainConfig.googleAnalyticsID !== "") {
+  ReactGA.initialize(mainConfig.googleAnalyticsID);
+  ReactGA.pageview(window.location.pathname + window.location.search);
+}
 
 // THIS APP ACCEPTS A FULL URL TO GEOSERVER LAYER
 // E.G.  https://opengis.simcoe.ca/geoserver/rest/workspaces/simcoe/datastores/paradise/featuretypes/Railway.json
