@@ -158,7 +158,7 @@ class App extends Component {
                 </label>
                 &nbsp;
                 <a href="http://maps.simcoe.ca/openlicense.html" target="_blank" rel="noopener noreferrer">
-                  View Terms of Use
+                  View License
                 </a>
               </div>
             </div>
