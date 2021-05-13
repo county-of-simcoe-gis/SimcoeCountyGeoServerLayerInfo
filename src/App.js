@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
 import * as helpers from "./helpers";
-import MapComponent from "./MapComponent.jsx";
 import mainConfig from "./config.json";
 import ReactGA from "react-ga";
+
 
 if (mainConfig.googleAnalyticsID !== undefined && mainConfig.googleAnalyticsID !== "") {
   ReactGA.initialize(mainConfig.googleAnalyticsID);
@@ -29,20 +29,64 @@ class App extends Component {
     super(props);
 
     this.state = {
-      layerInfo: this.getInfo(),
+      layerInfo: undefined,
       termsAccepted: false,
     };
   }
-
+  componentDidMount(){
+    this.getInfo();
+  }
   // GET LAYER INFO FROM URL
-  getInfo() {
+  async getInfo() {
     if (layerURL == null) return;
 
     helpers.getJSON(layerURL, (response) => {
-      this.setState({ layerInfo: response.featureType });
+      if ( response.featureType === undefined) {
+        response["featureType"] = this.parseArcGisFeature(response, (result)=>{
+          this.setState({ layerInfo: result });
+        });
+      }else{
+        this.setState({ layerInfo: response.featureType });
+      }
+      
     });
   }
-
+  
+   parseArcGisFeature = (featureInfo, callback) =>{
+    let featureType = {};
+    featureType["nativeCRS"] = {};
+    featureType.nativeCRS["@class"] = "Projected";
+    if (featureInfo.sourceSpatialReference.wkt === undefined) {
+      featureType.nativeCRS["$"] = ` "EPSG:${featureInfo.sourceSpatialReference.latestWkid}`;
+    } else {
+      if (featureInfo.sourceSpatialReference.wkt.indexOf("GEOGCS") !== -1) featureType.nativeCRS["@class"] = "Geographic";
+      featureType.nativeCRS["$"] = featureInfo.sourceSpatialReference.wkt;
+    }
+    
+    featureType["title"]= featureInfo.name;
+    featureType["name"] = featureInfo.name;
+    featureType["nativeBoundingBox"] = {};
+    featureType.nativeBoundingBox["minx"] = featureInfo.extent.xmin;
+    featureType.nativeBoundingBox["maxx"] = featureInfo.extent.xmax;
+    featureType.nativeBoundingBox["miny"] = featureInfo.extent.ymin;
+    featureType.nativeBoundingBox["maxy"] = featureInfo.extent.ymax;
+    let nativeBoundingBoxCrs = {};
+    nativeBoundingBoxCrs["@class"] = "projected";
+    nativeBoundingBoxCrs["$"] = `EPSG:${featureInfo.extent.spatialReference.latestWkid}`;
+    featureType.nativeBoundingBox["crs"] = nativeBoundingBoxCrs;
+    const descriptionObj = helpers.parseESRIDescription(featureInfo.description);
+    featureType["abstract"] = descriptionObj.description;
+    featureType["attributes"] = {};
+    featureType.attributes["attribute"]= featureInfo.fields.map(item => {
+      return {name: item.name, binding: item.type.replace("esriFieldType","")};
+    });
+    const epsgUrl = (wkt) => `http://epsg.io/${wkt}.wkt`;
+    if (featureInfo.sourceSpatialReference.latestWkid === undefined) callback (featureType);
+    else helpers.httpGetText(epsgUrl(featureInfo.sourceSpatialReference.latestWkid), (projection)=>{
+          if (projection !== "ERROR") featureType.nativeCRS["$"] = projection;
+          callback (featureType);
+        });
+  }
   // CLEAN UP THE PROJECTION STRING
   getFormattedProjection = () => {
     let projClass = "";
@@ -62,7 +106,7 @@ class App extends Component {
       proj = helpers.toTitleCase(projClass) + " - " + projArray[1];
     }
 
-    console.log(proj);
+    //console.log(proj);
     return proj;
   };
 
@@ -105,7 +149,7 @@ class App extends Component {
     const crs = this.state.layerInfo.nativeCRS["$"];
     const boundingBox = this.state.layerInfo.nativeBoundingBox;
 
-    console.log(showDownload);
+    //console.log(showDownload);
     return (
       <div className="main-container">
         <h1 className={layerURL == null ? "gli-main-error" : "gli-main-error hidden"}>Error: Layer Not Found</h1>
@@ -145,7 +189,7 @@ class App extends Component {
           </table>
         </div>
 
-        <div className={showDownload == 1 && this.state.layerInfo.name !== "Assessment Parcel" ? "item-container" : "hidden"}>
+        <div className={showDownload === 1 && this.state.layerInfo.name !== "Assessment Parcel" ? "item-container" : "hidden"}>
           <fieldset>
             <legend>Download</legend>
             <div className="item-content">
