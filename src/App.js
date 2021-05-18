@@ -189,7 +189,7 @@ class App extends Component {
           </table>
         </div>
 
-        <div className={showDownload === 1 && this.state.layerInfo.name !== "Assessment Parcel" ? "item-container" : "hidden"}>
+        <div className={showDownload == 1 && this.state.layerInfo.name !== "Assessment Parcel" ? "item-container" : "hidden"}>
           <fieldset>
             <legend>Download</legend>
             <div className="item-content">
