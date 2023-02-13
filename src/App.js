@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import "./App.css";
 import * as helpers from "./helpers";
 import mainConfig from "./config.json";
-import ReactGA from "react-ga";
-
+import ReactGA from "react-ga4";
 
 if (mainConfig.googleAnalyticsID !== undefined && mainConfig.googleAnalyticsID !== "") {
   ReactGA.initialize(mainConfig.googleAnalyticsID);
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
 }
 
 // THIS APP ACCEPTS A FULL URL TO GEOSERVER LAYER
@@ -33,7 +32,7 @@ class App extends Component {
       termsAccepted: false,
     };
   }
-  componentDidMount(){
+  componentDidMount() {
     this.getInfo();
   }
   // GET LAYER INFO FROM URL
@@ -41,18 +40,17 @@ class App extends Component {
     if (layerURL == null) return;
 
     helpers.getJSON(layerURL, (response) => {
-      if ( response.featureType === undefined) {
-        response["featureType"] = this.parseArcGisFeature(response, (result)=>{
+      if (response.featureType === undefined) {
+        response["featureType"] = this.parseArcGisFeature(response, (result) => {
           this.setState({ layerInfo: result });
         });
-      }else{
+      } else {
         this.setState({ layerInfo: response.featureType });
       }
-      
     });
   }
-  
-   parseArcGisFeature = (featureInfo, callback) =>{
+
+  parseArcGisFeature = (featureInfo, callback) => {
     let featureType = {};
     featureType["nativeCRS"] = {};
     featureType.nativeCRS["@class"] = "Projected";
@@ -62,8 +60,8 @@ class App extends Component {
       if (featureInfo.sourceSpatialReference.wkt.indexOf("GEOGCS") !== -1) featureType.nativeCRS["@class"] = "Geographic";
       featureType.nativeCRS["$"] = featureInfo.sourceSpatialReference.wkt;
     }
-    
-    featureType["title"]= featureInfo.name;
+
+    featureType["title"] = featureInfo.name;
     featureType["name"] = featureInfo.name;
     featureType["nativeBoundingBox"] = {};
     featureType.nativeBoundingBox["minx"] = featureInfo.extent.xmin;
@@ -77,16 +75,17 @@ class App extends Component {
     const descriptionObj = helpers.parseESRIDescription(featureInfo.description);
     featureType["abstract"] = descriptionObj.description;
     featureType["attributes"] = {};
-    featureType.attributes["attribute"]= featureInfo.fields.map(item => {
-      return {name: item.name, binding: item.type.replace("esriFieldType","")};
+    featureType.attributes["attribute"] = featureInfo.fields.map((item) => {
+      return { name: item.name, binding: item.type.replace("esriFieldType", "") };
     });
     const epsgUrl = (wkt) => `https://epsg.io/${wkt}.wkt`;
-    if (featureInfo.sourceSpatialReference.latestWkid === undefined) callback (featureType);
-    else helpers.httpGetText(epsgUrl(featureInfo.sourceSpatialReference.latestWkid), (projection)=>{
-          if (projection !== "ERROR") featureType.nativeCRS["$"] = projection;
-          callback (featureType);
-        });
-  }
+    if (featureInfo.sourceSpatialReference.latestWkid === undefined) callback(featureType);
+    else
+      helpers.httpGetText(epsgUrl(featureInfo.sourceSpatialReference.latestWkid), (projection) => {
+        if (projection !== "ERROR") featureType.nativeCRS["$"] = projection;
+        callback(featureType);
+      });
+  };
   // CLEAN UP THE PROJECTION STRING
   getFormattedProjection = () => {
     let projClass = "";
