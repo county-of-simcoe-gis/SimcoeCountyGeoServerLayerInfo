@@ -78,7 +78,9 @@ class App extends Component {
     featureType.attributes["attribute"] = featureInfo.fields.map((item) => {
       return { name: item.name, binding: item.type.replace("esriFieldType", "") };
     });
-    const epsgUrl = (wkt) => `https://epsg.io/${wkt}.wkt`;
+    // const epsgUrl = (wkt) => `https://epsg.io/${wkt}.wkt`;
+    const epsgUrl = (wkt) => `https://opengis.simcoe.ca/api_v2/public/map/geometry/epsg/${wkt}/wkt`;
+
     if (featureInfo.sourceSpatialReference.latestWkid === undefined) callback(featureType);
     else
       helpers.httpGetText(epsgUrl(featureInfo.sourceSpatialReference.latestWkid), (projection) => {
