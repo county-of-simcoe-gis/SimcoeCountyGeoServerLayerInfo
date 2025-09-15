@@ -2,7 +2,7 @@
   "name": "geoserverlayerinfo",
   "version": "0.1.1",
   "private": true,
-  "homepage": "http://paradise:8443/layerInfo",
+  "homepage": "layerInfo",
   "dependencies": {
     "ol": "^5.3.3",
     "react": "^16.14.0",
