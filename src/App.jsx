@@ -260,14 +260,15 @@ class App extends Component {
 export default App;
 
 // IMPORT ALL IMAGES
-const images = importAllImages(require.context("./images", false, /\.(png|jpe?g|svg|gif)$/));
-function importAllImages(r) {
-  let images = {};
-  r.keys().map((item, index) => {
-    images[item.replace("./", "")] = r(item);
-  });
-  return images;
-}
+import shareIcon from "./images/share-icon.png";
+import printIcon from "./images/print-icon.png";
+import newWindowIcon from "./images/new-window-icon.png";
+
+const images = {
+  "share-icon.png": shareIcon,
+  "print-icon.png": printIcon,
+  "new-window-icon.png": newWindowIcon,
+};
 
 function FieldItem(props) {
   const fieldInfo = props.fieldInfo;
