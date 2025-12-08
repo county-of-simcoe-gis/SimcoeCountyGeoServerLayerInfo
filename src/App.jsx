@@ -4,6 +4,17 @@ import * as helpers from "./helpers";
 import mainConfig from "./config.json";
 import ReactGA from "react-ga4";
 
+// IMPORT ALL IMAGES
+import shareIcon from "./images/share-icon.png";
+import printIcon from "./images/print-icon.png";
+import newWindowIcon from "./images/new-window-icon.png";
+
+const images = {
+  "share-icon.png": shareIcon,
+  "print-icon.png": printIcon,
+  "new-window-icon.png": newWindowIcon,
+};
+
 if (mainConfig.googleAnalyticsID !== undefined && mainConfig.googleAnalyticsID !== "") {
   ReactGA.initialize(mainConfig.googleAnalyticsID);
   ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
@@ -258,17 +269,6 @@ class App extends Component {
 }
 
 export default App;
-
-// IMPORT ALL IMAGES
-import shareIcon from "./images/share-icon.png";
-import printIcon from "./images/print-icon.png";
-import newWindowIcon from "./images/new-window-icon.png";
-
-const images = {
-  "share-icon.png": shareIcon,
-  "print-icon.png": printIcon,
-  "new-window-icon.png": newWindowIcon,
-};
 
 function FieldItem(props) {
   const fieldInfo = props.fieldInfo;
