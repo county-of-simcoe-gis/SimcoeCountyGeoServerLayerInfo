@@ -1,6 +1,3 @@
-import shortid from 'shortid';
-
-
 export async function httpGetTextWait(url, callback) {
   let data = await fetch(url)
     .then((response) => {
@@ -67,7 +64,7 @@ export function toTitleCase(str) {
 
 // URL FRIENDLY STRING ID
 export function getUID(){
-  return shortid.generate();
+  return Math.random().toString(36).substring(2, 9);
 }
   
 export function parseESRIDescription (description){

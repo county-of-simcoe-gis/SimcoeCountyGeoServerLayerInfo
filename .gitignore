@@ -13,6 +13,7 @@ sc_copyToServer.bat
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store

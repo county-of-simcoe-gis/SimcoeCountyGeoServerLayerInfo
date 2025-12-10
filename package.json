@@ -3,22 +3,22 @@
   "version": "0.1.1",
   "private": true,
   "homepage": "layerInfo",
+  "type": "module",
   "dependencies": {
     "ol": "^5.3.3",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-ga4": "^2.0.0",
-    "react-scripts": "^5.0.1",
-    "shortid": "^2.2.16"
+    "react-ga4": "^2.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "vite": "^7.2.6"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "browserslist": [
     ">0.2%",
